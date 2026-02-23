@@ -41,3 +41,9 @@ Sentinel was enabled to provide SIEM capabilities on top of the workspace.
 
 Purpose:
 This allows Azure AD authentication logs to flow into the workspace for detection use cases.
+
+## Detection Logic
+
+The detection query used in this lab is available in:
+
+`/queries/brute-force.kql`
