@@ -101,7 +101,7 @@ Opened the generated incident and reviewed:
 
 Entity mapping enabled enriched investigation context inside Sentinel.
 
-(screenshots/incident.jpg)
+![Incident](screenshots/incident-generated.jpg)
 
 ## Lessons Learned
 
