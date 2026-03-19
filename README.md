@@ -129,10 +129,20 @@ The detection rule performed as expected, validating the following key metrics:
 | **Query Efficiency** | Simple aggregation pattern ensures performant execution even on large log volumes. |
 | **Visual Documentation** | All key stages (query, timestamps, alert, overview) captured for validation. |
 
-14. Key Takeaways & Recommendations
 
-Threshold Tuning is Essential: The threshold of >= 5 failures in 5 minutes worked for this test. In production, this should be baselined against normal user behavior. Consider:
+## 14. 🎯 Response Actions
 
-Increasing to 10+ for high-volume users
-Creating separate rules for privileged accounts (lower threshold of 3)
-Query Optimization: The current query is clean and efficient. Consider these enhancements for production:
+- **Block malicious IP addresses** – Prevent further attack attempts from the source
+- **Review authentication activity for lateral movement** – Identify if other accounts were targeted
+- **Reset or disable targeted accounts if required** – Contain potential compromise
+- **Enforce MFA and account lockout policies** – Strengthen authentication security
+
+---
+
+## 15. 🎯 Skills Demonstrated
+
+- **KQL log analysis** – Developed and optimized detection queries
+- **SOC alert triage** – Prioritized and investigated security alerts
+- **Threat intelligence enrichment** – Correlated IP reputation and failure codes
+- **MITRE ATT&CK mapping** – Aligned detection to T1110 and T1078
+- **Incident response decision-making** – Executed containment and recovery actions
