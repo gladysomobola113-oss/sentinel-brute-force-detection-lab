@@ -16,6 +16,7 @@ SIEM Platform: Microsoft Sentinel
 Data Source: Microsoft Entra ID Sign-in Logs (SigninLogs)
 Query Language: Kusto Query Language (KQL)
 Threat Intelligence Framework: MITRE ATT&CK
+
 4. Detection Logic & KQL Implementation
 
 A custom analytics rule was created in Microsoft Sentinel using the following KQL query. The query identifies all failed sign-in attempts (ResultType != 0), aggregates them by user, source IP, and 5-minute time bins, then filters for thresholds indicating malicious activity.
@@ -46,3 +47,48 @@ summarize FailedAttempts = count()	Counts the number of failures
 by UserPrincipalName, IPAddress	Groups by specific user and source IP
 bin(TimeGenerated, 5m)	Creates 5-minute time windows for aggregation
 where FailedAttempts >= 5	Threshold filter—alerts on 5+ failures in 5 minutes
+
+5. Screenshot Reference: KQL Query
+
+[SCREENSHOT 1: KQL Query]
+This screenshot shows the KQL query executed in the Log Analytics workspace, demonstrating the query logic and preview of results.
+The query was tested in the Microsoft Sentinel Logs blade to validate syntax and expected output before implementing as a scheduled analytics rule.
+
+6. Validation Approach (Simulation)
+
+To trigger the detection rule, a controlled simulation was performed:
+
+Target: A non-production test user account.
+Method: Manual entry of incorrect passwords via a private browser session to prevent credential caching and session reuse.
+Pacing: 7-10 failed login attempts were executed rapidly within the 5-minute detection window.
+Verification: The resulting SigninLogs were confirmed to be ingested into the Sentinel Log Analytics workspace.
+7. Screenshot Reference: Timestamp Analysis
+
+[SCREENSHOT 2: Timestamp Analysis]
+*This screenshot captures the failed sign-in events in the Log Analytics workspace, showing the timestamps of each failed attempt clustered within the 5-minute window. The timestamps confirm the simulation occurred within the detection timeframe.*
+The timestamp analysis validates that all failed attempts were properly logged and fell within a single 5-minute bin, ensuring the aggregation logic would capture them correctly.
+
+8. Investigation & Findings
+
+Upon the next scheduled run of the analytics rule (within 5 minutes of the simulation):
+
+Alert Generation: A security alert was successfully created in Microsoft Sentinel.
+Entity Identification: The alert correctly identified the targeted user account and the source IP address based on the by clause in the query.
+Contextual Data: The alert details included the count of failed attempts (FailedAttempts) and the 5-minute time window.
+Log Correlation: Manual investigation of the raw SigninLogs confirmed the 1:1 correlation between the alert and the simulated brute-force events.
+Sample Alert Data:
+
+UserPrincipalName	IPAddress	TimeGenerated (bin)	FailedAttempts
+testuser@domain.com
+192.168.1.100	2026-01-15 14:05:00	7
+9. Screenshot Reference: Generated Alert
+
+[SCREENSHOT 3: Generated Alert]
+This screenshot shows the security alert as it appears in Microsoft Sentinel. The alert details include the alert name, severity, description, and the entities identified (UserPrincipalName and IPAddress).
+The alert screen confirms that the detection logic successfully identified the brute-force pattern and presented it in a format ready for triage.
+
+10. Screenshot Reference: Brute Force Detection Overview
+
+[SCREENSHOT 4: Brute Force Detection Overview]
+This screenshot provides a comprehensive view of the brute-force detection, including the analytics rule configuration, the triggered alert, and the associated incident in the Sentinel interface.
+This overview demonstrates the complete detection-to-incident pipeline working as designed.
