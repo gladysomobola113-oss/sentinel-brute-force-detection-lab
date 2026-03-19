@@ -1,62 +1,48 @@
-# sentinel-brute-force-detection
-Microsoft Sentinel detection engineering lab – brute force detection using KQL.
-This lab demonstrates how to design and validate a brute-force detection rule using Microsoft Sentinel and Azure AD sign-in logs.
-Validation and Testing
+1. Objective
 
-Brute-Force Simulation
+To design, implement, and validate a custom brute-force detection use case in Microsoft Sentinel. The primary goal was to detect high-velocity failed authentication attempts against Microsoft Entra ID (formerly Azure AD) user accounts, automatically generate security alerts, and streamline the incident response process.
 
-To validate the detection rule, a brute-force login scenario was simulated against a test user account.
+2. Scenario & Threat Model
 
-Actions performed:
-	•	Opened a private browser session
-	•	Attempted multiple failed login attempts against the test account
-	•	Ensured all attempts occurred within a five-minute window
+A simulated brute-force attack was conducted against a test user account to validate the detection logic and alert generation pipeline. The exercise focused on identifying:
 
-Purpose
+Volume-based Anomalies: Multiple failed login attempts occurring within a short, defined timeframe.
+Source-Based Patterns: A high density of failures originating from a single source IP address targeting a specific user.
+This scenario maps directly to the threat of credential stuffing or password guessing attacks (MITRE ATT&CK T1110).
 
-The objective was to generate authentication failure events in Microsoft Entra ID logs that could be evaluated by the detection rule in Microsoft Sentinel.
+3. Tools & Technologies
 
-Analytics Rule Execution
+SIEM Platform: Microsoft Sentinel
+Data Source: Microsoft Entra ID Sign-in Logs (SigninLogs)
+Query Language: Kusto Query Language (KQL)
+Threat Intelligence Framework: MITRE ATT&CK
+4. Detection Logic & KQL Implementation
 
-The analytics rule was configured to run every five minutes.
+A custom analytics rule was created in Microsoft Sentinel using the following KQL query. The query identifies all failed sign-in attempts (ResultType != 0), aggregates them by user, source IP, and 5-minute time bins, then filters for thresholds indicating malicious activity.
 
-After generating the failed login attempts, the system was allowed to complete the next scheduled rule evaluation cycle so that the newly generated authentication events could be processed.
+Detection Logic Breakdown:
 
+Step 1: Filter for all failed sign-in events (ResultType != 0).
+Step 2: Aggregate counts by user, source IP, and 5-minute time windows.
+Step 3: Retain only results where failed attempts meet or exceed the threshold (≥5).
+Analytics Rule Settings:
 
-Alert Verification
+Rule Frequency: Run query every 5 minutes.
+Lookback Period: Look at data from the last 5 minutes.
+Alert Threshold: Generate alert when query results > 0 (i.e., when any row meets the ≥5 condition).
+KQL Query (queries/brute-force.kql):
 
-Once the rule executed, the following observations were confirmed:
-	•	An alert was successfully generated
-	•	The alert contained the affected user account
-	•	The alert captured the originating source IP address
+kql
+SigninLogs
+| where ResultType != 0
+| summarize FailedAttempts = count()
+    by UserPrincipalName, IPAddress, bin(TimeGenerated, 5m)
+| where FailedAttempts >= 5
+Query Explanation:
 
-This confirmed that the detection logic correctly identified abnormal authentication behavior.
-
-
-Incident Creation
-
-Incident creation was enabled within the analytics rule configuration.
-
-Following alert generation:
-	•	The alert was automatically grouped into an incident
-	•	The incident contained the associated alert and relevant entities
-
-This validated the incident automation workflow within Microsoft Sentinel.
-
-
-Entity Mapping Review
-
-The generated incident was opened for further analysis.
-
-The following entities were reviewed:
-	•	User account
-	•	Source IP address
-	•	Related authentication log entries
-
-Entity mapping provided additional investigation context and enabled a clearer understanding of the authentication activity.
-
-
-Result
-
-The detection rule successfully identified simulated brute-force authentication activity and generated the expected alert and incident within Microsoft Sentinel.
-
+Component	Purpose
+where ResultType != 0	Filters for all failed sign-in attempts (non-zero result codes)
+summarize FailedAttempts = count()	Counts the number of failures
+by UserPrincipalName, IPAddress	Groups by specific user and source IP
+bin(TimeGenerated, 5m)	Creates 5-minute time windows for aggregation
+where FailedAttempts >= 5	Threshold filter—alerts on 5+ failures in 5 minutes
