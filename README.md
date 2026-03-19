@@ -64,7 +64,7 @@ Pacing: 7-10 failed login attempts were executed rapidly within the 5-minute det
 Verification: The resulting SigninLogs were confirmed to be ingested into the Sentinel Log Analytics workspace.
 7. Screenshot Reference: Timestamp Analysis
 
-![Kql Query](screenshots/kql-query.jpg)
+![Timestamp-analysis](screenshots/Timestamp-analysis.png)
 *This screenshot captures the failed sign-in events in the Log Analytics workspace, showing the timestamps of each failed attempt clustered within the 5-minute window. The timestamps confirm the simulation occurred within the detection timeframe.*
 The timestamp analysis validates that all failed attempts were properly logged and fell within a single 5-minute bin, ensuring the aggregation logic would capture them correctly.
 
@@ -89,6 +89,6 @@ The alert screen confirms that the detection logic successfully identified the b
 
 10. Screenshot Reference: Brute Force Detection Overview
 
-![Kql Query](screenshots/kql-query.jpg)
+![Brute force](screenshots/Brute-force.png)
 This screenshot provides a comprehensive view of the brute-force detection, including the analytics rule configuration, the triggered alert, and the associated incident in the Sentinel interface.
 This overview demonstrates the complete detection-to-incident pipeline working as designed.
