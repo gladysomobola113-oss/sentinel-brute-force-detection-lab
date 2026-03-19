@@ -83,7 +83,7 @@ testuser@domain.com
 192.168.1.100	2026-01-15 14:05:00	7
 9. Screenshot Reference: Generated Alert
 
-![Kql Query](screenshots/kql-query.jpg)
+![Alert](screenshots/Alert.jpg)
 This screenshot shows the security alert as it appears in Microsoft Sentinel. The alert details include the alert name, severity, description, and the entities identified (UserPrincipalName and IPAddress).
 The alert screen confirms that the detection logic successfully identified the brute-force pattern and presented it in a format ready for triage.
 
