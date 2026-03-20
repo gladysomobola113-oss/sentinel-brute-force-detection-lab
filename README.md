@@ -65,7 +65,30 @@ Upon the next scheduled run of the analytics rule (within 5 minutes of the simul
 
   ![Alert](screenshots/Alert.jpg)
 
-    ![Brute force](screenshots/Bruteforce.png)
+    ![Brute-force](screenshots/Brute-force.png)
+
+  ## MITRE ATT&CK Mapping
+
+| Technique ID | Technique Name | Relevance |
+|--------------|----------------|-----------|
+| **T1110** | Brute Force | Core technique detected by this rule. Specifically, sub-technique T1110.001 (Password Guessing). |
+| **T1078** | Valid Accounts | This alert serves as a precursor; a successful brute force could lead to adversary access. |
+
+## 13. Outcome & Success Metrics
+
+The detection rule performed as expected, validating the following key metrics:
+
+| Metric | Result |
+|--------|--------|
+| **Detection Accuracy** | Successfully identified 100% of simulated brute-force attempts meeting the ≥5 threshold. |
+| **Alert Latency** | Alert generated within 5 minutes of the activity window closing. |
+| **False Positive Rate** | 0% during controlled testing (requires tuning for production noise). |
+| **Query Efficiency** | Simple aggregation pattern ensures performant execution even on large log volumes. |
+| **Visual Documentation** | All key stages (query, timestamps, alert, overview) captured for validation. |
+
+
+
+  
 
   
 
