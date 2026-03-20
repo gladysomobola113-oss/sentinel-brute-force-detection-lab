@@ -74,7 +74,7 @@ Upon the next scheduled run of the analytics rule (within 5 minutes of the simul
 | **T1110** | Brute Force | Core technique detected by this rule. Specifically, sub-technique T1110.001 (Password Guessing). |
 | **T1078** | Valid Accounts | This alert serves as a precursor; a successful brute force could lead to adversary access. |
 
-## 13. Outcome & Success Metrics
+## Outcome & Success Metrics
 
 The detection rule performed as expected, validating the following key metrics:
 
@@ -86,7 +86,34 @@ The detection rule performed as expected, validating the following key metrics:
 | **Query Efficiency** | Simple aggregation pattern ensures performant execution even on large log volumes. |
 | **Visual Documentation** | All key stages (query, timestamps, alert, overview) captured for validation. |
 
+## Key Takeaways & Recommendations
 
+Threshold Tuning is Essential: The threshold of >= 5 failures in 5 minutes worked for this test. In production, this should be baselined against normal user behavior. Consider:
+
+- Increasing to 10+ for high-volume users
+- Creating separate rules for privileged accounts (lower threshold of 3)
+- Query Optimization: The current query is clean and efficient. Consider these enhancements for production:
+
+## Incident Response Actions
+
+- Block malicious IP addresses
+-  Review authentication activity for lateral movement
+- Reset or disable targeted accounts if required
+- Enforce MFA and account lockout policies
+
+ ## Skills Demonstrated
+- KQL log analysis and query optimization
+- SOC alert triage and investigation
+- MITRE ATT&CK mapping and threat modeling
+- Incident response decision-making and workflow validation
+- Security pipeline validation (analytics rule → alert → incident)
+
+ ## Full Technical Report
+
+For the complete deep-dive documentation including query variants, metrics, and deployment recommendations, see:
+http://report/incident-report.md
+
+  
 
   
 
